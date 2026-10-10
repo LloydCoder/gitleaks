@@ -42,7 +42,7 @@ func InterswitchMACKey() *config.Rule {
 		Keywords:    []string{"macKey"},
 	}
 	tps := utils.GenerateSampleSecrets("interswitch", "macKey="+secrets.NewSecret(utils.Hex("64")))
-	fps := []string{"macKey=0000000000000000000000000000000000000000000000000000000000000000"}
+	fps := []string{"macKey=REDACTED_PLACEHOLDER"}
 	return utils.Validate(r, tps, fps)
 }
 
