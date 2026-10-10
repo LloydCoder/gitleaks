@@ -29,7 +29,7 @@ func FlutterwaveSecretKey() *config.Rule {
 		Description: "Identified a Flutterwave Secret Key, risking unauthorized financial transactions and data breaches.",
 		Regex:       regexp.MustCompile(`(?i)(FLWSECK(?:_TEST|_LIVE)?-[A-Za-z0-9]{32}-X)`),
 		Entropy:     2,
-		Keywords:    []string{"FLWSECK_TEST"},
+		Keywords:    []string{"flwseck_test", "flwseck_live"},
 	}
 
 	// validate
