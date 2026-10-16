@@ -27,14 +27,16 @@ func FlutterwaveSecretKey() *config.Rule {
 	r := config.Rule{
 		RuleID:      "flutterwave-secret-key",
 		Description: "Identified a Flutterwave Secret Key, risking unauthorized financial transactions and data breaches.",
-		Regex:       regexp.MustCompile(`FLWSECK_TEST-(?i)[a-h0-9]{32}-X`),
+		Regex:       regexp.MustCompile(`(?i)\b(FLWSECK(?:_TEST)?-[A-Za-z0-9]{32}-X)\b`),
 		Entropy:     2,
-		Keywords:    []string{"FLWSECK_TEST"},
+		Keywords:    []string{"flwseck-", "flwseck_test"},
 	}
 
-	// validate
-	tps := utils.GenerateSampleSecrets("flutterwavePubKey", "FLWSECK_TEST-"+secrets.NewSecret(utils.Hex("32"))+"-X")
-	return utils.Validate(r, tps, nil)
+	// Validate both live and test secret-key formats, and reject placeholder/boundary false positives.
+	tps := utils.GenerateSampleSecrets("flutterwaveSecretKey", "FLWSECK-"+secrets.NewSecret(utils.Hex("32"))+"-X")
+	tps = append(tps, utils.GenerateSampleSecrets("flutterwaveSecretKey", "FLWSECK_TEST-"+secrets.NewSecret(utils.Hex("32"))+"-X")...)
+	fps := []string{"FLWSECK_TEST-REDACTED_PLACEHOLDER-X", "xFLWSECK-"+secrets.NewSecret(utils.Hex("32"))+"-Xsuffix"}
+	return utils.Validate(r, tps, fps)
 }
 
 func FlutterwaveEncKey() *config.Rule {
